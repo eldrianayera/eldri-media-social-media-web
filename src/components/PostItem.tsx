@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import type { Post } from "./PostList";
+import { LucideHeart, MessageCircle } from "lucide-react";
 
 interface Props {
   post: Post;
@@ -37,6 +38,12 @@ export const PostItem = ({ post }: Props) => {
               alt={post.title}
               className="w-full rounded-[20px] object-cover max-h-[150px] mx-auto"
             />
+          </div>
+          <div className="flex gap-3">
+            <LucideHeart />
+            {post.like_count}
+            <MessageCircle />
+            {post.comment_count}
           </div>
         </div>
       </Link>

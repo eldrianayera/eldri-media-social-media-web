@@ -13,6 +13,8 @@ interface Vote {
   vote: number;
 }
 
+
+
 const vote = async (voteValue: number, postId: number, userId: string) => {
   const { data: existingVote } = await supabase
     .from("votes")
