@@ -9,38 +9,31 @@ export const Navbar = () => {
 
   const displayName = user?.user_metadata.user_name || user?.email;
 
+  // Shared classes using theme variables
+  const linkClass = "text-foreground hover:text-primary transition-colors";
+  const mobileLinkClass =
+    "block px-3 py-2 rounded-md text-base font-medium text-foreground hover:text-primary hover:bg-border/30";
+
   return (
-    <nav className="fixed top-0 w-full z-40 bg-[rgba(10,10,10,0.8)] backdrop-blur-lg border-b border-white/10 shadow-lg">
+    <nav className="fixed top-0 w-full z-40 bg-[rgba(10,10,10,0.8)] backdrop-blur-lg border-b border-border shadow-lg">
       <div className="max-w-5xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="font-mono text-xl font-bold text-white">
-            Eldri<span className="text-purple-500">.media</span>
+          <Link to="/" className="font-mono text-xl font-bold text-foreground">
+            Eldri<span className="text-primary">.media</span>
           </Link>
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link
-              to="/"
-              className="text-gray-300 hover:text-white transition-colors"
-            >
+            <Link to="/" className={linkClass}>
               Home
             </Link>
-            <Link
-              to="/create"
-              className="text-gray-300 hover:text-white transition-colors"
-            >
+            <Link to="/create" className={linkClass}>
               Create Post
             </Link>
-            <Link
-              to="/communities"
-              className="text-gray-300 hover:text-white transition-colors"
-            >
+            <Link to="/communities" className={linkClass}>
               Communities
             </Link>
-            <Link
-              to="/community/create"
-              className="text-gray-300 hover:text-white transition-colors"
-            >
+            <Link to="/community/create" className={linkClass}>
               Create Community
             </Link>
           </div>
@@ -56,10 +49,10 @@ export const Navbar = () => {
                     className="w-8 h-8 rounded-full object-cover"
                   />
                 )}
-                <span className="text-gray-300">{displayName}</span>
+                <span className="text-foreground">{displayName}</span>
                 <button
                   onClick={signOut}
-                  className="bg-red-500 px-3 py-1 rounded"
+                  className="bg-red-500 px-3 py-1 rounded text-primary-foreground"
                 >
                   Sign Out
                 </button>
@@ -67,7 +60,7 @@ export const Navbar = () => {
             ) : (
               <button
                 onClick={signInWithGitHub}
-                className="bg-blue-500 px-3 py-1 rounded"
+                className="bg-primary px-3 py-1 rounded text-primary-foreground"
               >
                 Sign in with GitHub
               </button>
@@ -78,7 +71,7 @@ export const Navbar = () => {
           <div className="md:hidden">
             <button
               onClick={() => setMenuOpen((prev) => !prev)}
-              className="text-gray-300 focus:outline-none"
+              className="text-foreground focus:outline-none"
               aria-label="Toggle menu"
             >
               {menuOpen ? <X /> : <MenuIcon />}
@@ -91,28 +84,16 @@ export const Navbar = () => {
       {menuOpen && (
         <div className="md:hidden bg-[rgba(10,10,10,0.9)]">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            <Link
-              to="/"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
-            >
+            <Link to="/" className={mobileLinkClass}>
               Home
             </Link>
-            <Link
-              to="/create"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
-            >
+            <Link to="/create" className={mobileLinkClass}>
               Create Post
             </Link>
-            <Link
-              to="/communities"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
-            >
+            <Link to="/communities" className={mobileLinkClass}>
               Communities
             </Link>
-            <Link
-              to="/community/create"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
-            >
+            <Link to="/community/create" className={mobileLinkClass}>
               Create Community
             </Link>
           </div>

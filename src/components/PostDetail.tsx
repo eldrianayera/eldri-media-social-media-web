@@ -35,24 +35,40 @@ export const PostDetail = ({ postId }: Props) => {
   }
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-6xl font-bold mb-6 text-center bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+    <div className="space-y-6 max-w-3xl mx-auto px-4">
+      <h2
+        className="text-6xl font-bold mb-6 text-center bg-clip-text text-transparent"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, hsl(var(--primary)), hsl(var(--secondary)))",
+        }}
+      >
         {data?.title}
       </h2>
+
       {data?.image_url && (
         <img
           src={data.image_url}
           alt={data?.title}
-          className="mt-4 rounded object-cover w-full h-64"
+          className="mt-4 rounded-lg object-cover w-full max-h-96 shadow-md"
         />
       )}
-      <p className="text-gray-400">{data?.content}</p>
-      <p className="text-gray-500 text-sm">
+
+      <p className="text-foreground/80 leading-relaxed text-lg">
+        {data?.content}
+      </p>
+
+      <p className="text-foreground/60 text-sm italic">
         Posted on: {new Date(data!.created_at).toLocaleDateString()}
       </p>
 
-      <LikeButton postId={postId} />
-      <CommentSection postId={postId} />
+      <div className="pt-4 border-t border-border">
+        <LikeButton postId={postId} />
+      </div>
+
+      <div className="pt-6 border-t border-border">
+        <CommentSection postId={postId} />
+      </div>
     </div>
   );
 };

@@ -17,7 +17,7 @@ const fetchCommunityData = async (
 ): Promise<CommunityData> => {
   const { data, error } = await supabase
     .from("communities")
-    .select("name, posts(*)") 
+    .select("name, posts(*)")
     .eq("id", communityId)
     .single();
 
@@ -46,10 +46,7 @@ export const CommunityDisplay = ({ communityId }: Props) => {
 
   return (
     <div>
-      <h2 className="text-6xl font-bold mb-6 text-center bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
-        {data?.name}
-      </h2>
-
+      <h2 className="page-header mb-12 p-5">{data?.name}</h2>
       {data!.posts.length > 0 ? (
         <div className="flex flex-wrap gap-6 justify-center">
           {data!.posts.map((post) => (
@@ -57,7 +54,7 @@ export const CommunityDisplay = ({ communityId }: Props) => {
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-400">
+        <p className="text-center text-foreground/60">
           No posts in this community yet.
         </p>
       )}

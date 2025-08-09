@@ -126,29 +126,30 @@ export const CommentSection = ({ postId }: Props) => {
 
   return (
     <div className="mt-6">
-      <h3 className="text-2xl font-semibold mb-4">Comments</h3>
+      <h3 className="text-2xl font-semibold mb-4 text-foreground">Comments</h3>
+
       {/* Create Comment Section */}
       {user ? (
         <form onSubmit={handleSubmit} className="mb-4">
           <textarea
             value={newCommentText}
             onChange={(e) => setNewCommentText(e.target.value)}
-            className="w-full border border-white/10 bg-transparent p-2 rounded"
+            className="w-full border border-border bg-background p-2 rounded"
             placeholder="Write a comment..."
             rows={3}
           />
           <button
             type="submit"
-            className="mt-2 bg-purple-500 text-white px-4 py-2 rounded cursor-pointer"
+            className="mt-2 bg-primary text-primary-foreground px-4 py-2 rounded cursor-pointer"
           >
             {isPending ? "Posting..." : "Post Comment"}
           </button>
           {isError && (
-            <p className="text-red-500 mt-2">Error posting comment.</p>
+            <p className="text-destructive mt-2">Error posting comment.</p>
           )}
         </form>
       ) : (
-        <p className="mb-4 text-gray-600">
+        <p className="mb-4 text-muted-foreground">
           You must be logged in to post a comment.
         </p>
       )}

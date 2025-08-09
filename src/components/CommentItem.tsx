@@ -65,37 +65,40 @@ export const CommentItem = ({ comment, postId }: Props) => {
   };
 
   return (
-    <div className="pl-4 border-l border-white/10">
+    <div className="pl-4 border-l border-border">
       <div className="mb-2">
         <div className="flex items-center space-x-2">
           {/* Display the commenter's username */}
-          <span className="text-sm font-bold text-blue-400">
+          <span className="text-sm font-bold text-primary">
             {comment.author}
           </span>
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-foreground/60">
             {new Date(comment.created_at).toLocaleString()}
           </span>
         </div>
-        <p className="text-gray-300">{comment.content}</p>
+
+        <p className="text-foreground/80">{comment.content}</p>
+
         <button
           onClick={() => setShowReply((prev) => !prev)}
-          className="text-blue-500 text-sm mt-1"
+          className="text-primary text-sm mt-1"
         >
           {showReply ? "Cancel" : "Reply"}
         </button>
       </div>
+
       {showReply && user && (
         <form onSubmit={handleReplySubmit} className="mb-2">
           <textarea
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
-            className="w-full border border-white/10 bg-transparent p-2 rounded"
+            className="w-full border border-border bg-background p-2 rounded"
             placeholder="Write a reply..."
             rows={2}
           />
           <button
             type="submit"
-            className="mt-1 bg-blue-500 text-white px-3 py-1 rounded"
+            className="mt-1 bg-primary text-primary-foreground px-3 py-1 rounded"
           >
             {isPending ? "Posting..." : "Post Reply"}
           </button>
@@ -108,6 +111,7 @@ export const CommentItem = ({ comment, postId }: Props) => {
           <button
             onClick={() => setIsCollapsed((prev) => !prev)}
             title={isCollapsed ? "Hide Replies" : "Show Replies"}
+            className="text-primary"
           >
             {isCollapsed ? <ArrowDownIcon /> : <ArrowUp />}
           </button>

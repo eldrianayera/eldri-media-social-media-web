@@ -13,8 +13,6 @@ interface Vote {
   vote: number;
 }
 
-
-
 const vote = async (voteValue: number, postId: number, userId: string) => {
   const { data: existingVote } = await supabase
     .from("votes")
@@ -101,7 +99,9 @@ export const LikeButton = ({ postId }: Props) => {
       <button
         onClick={() => mutate(1)}
         className={`px-3 py-1 cursor-pointer rounded transition-colors duration-150 ${
-          userVote === 1 ? "bg-green-500 text-white" : "bg-gray-200 text-black"
+          userVote === 1
+            ? "bg-green-600 text-primary-foreground"
+            : "bg-border text-foreground"
         }`}
       >
         👍 {likes}
@@ -109,7 +109,9 @@ export const LikeButton = ({ postId }: Props) => {
       <button
         onClick={() => mutate(-1)}
         className={`px-3 py-1 cursor-pointer rounded transition-colors duration-150 ${
-          userVote === -1 ? "bg-red-500 text-white" : "bg-gray-200 text-black"
+          userVote === -1
+            ? "bg-destructive text-primary-foreground"
+            : "bg-border text-foreground"
         }`}
       >
         👎 {dislikes}

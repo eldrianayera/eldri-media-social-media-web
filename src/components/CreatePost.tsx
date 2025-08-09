@@ -3,6 +3,7 @@ import { useState, type ChangeEvent } from "react";
 import { supabase } from "../supabase-client";
 import { useAuth } from "../context/AuthContext";
 import { fetchCommunities } from "./CommunityList";
+import { useNavigate } from "react-router";
 
 interface PostInput {
   title: string;
@@ -39,6 +40,8 @@ export const CreatePost = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [communityId, setCommunityId] = useState<number | null>(null);
 
+  const navigate = useNavigate();
+
   const { user } = useAuth();
 
   const { data: communities } = useQuery({
@@ -50,11 +53,18 @@ export const CreatePost = () => {
     mutationFn: (data: { post: PostInput; imageFile: File }) => {
       return createPost(data.post, data.imageFile);
     },
+
+    onSuccess: () => {
+      navigate(`/`);
+    },
   });
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    if (!selectedFile) return;
+    if (!selectedFile) {
+      alert("Please select image ...");
+      return;
+    }
     mutate({
       post: {
         title,
@@ -80,7 +90,10 @@ export const CreatePost = () => {
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4">
       <div>
-        <label htmlFor="title" className="block mb-2 font-medium">
+        <label
+          htmlFor="title"
+          className="block mb-2 font-medium text-foreground"
+        >
           Title
         </label>
         <input
@@ -88,30 +101,39 @@ export const CreatePost = () => {
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full border border-white/10 bg-transparent p-2 rounded"
+          className="w-full border border-border bg-background p-2 rounded text-foreground"
           required
         />
       </div>
       <div>
-        <label htmlFor="content" className="block mb-2 font-medium">
+        <label
+          htmlFor="content"
+          className="block mb-2 font-medium text-foreground"
+        >
           Content
         </label>
         <textarea
           id="content"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="w-full border border-white/10 bg-transparent p-2 rounded"
+          className="w-full border border-border bg-background p-2 rounded text-foreground"
           rows={5}
           required
         />
       </div>
 
       <div>
-        <label htmlFor="community">Select Community</label>
+        <label
+          htmlFor="community"
+          className="block mb-2 font-medium text-foreground"
+        >
+          Select Community
+        </label>
         <select
           name="community"
           id="community"
           onChange={handleCommunityChange}
+          className="w-full border border-border bg-background p-2 rounded text-foreground"
         >
           <option value={""}> -- Choose a Community -- </option>
           {communities?.map((community, key) => (
@@ -123,7 +145,10 @@ export const CreatePost = () => {
       </div>
 
       <div>
-        <label htmlFor="image" className="block mb-2 font-medium">
+        <label
+          htmlFor="image"
+          className="block mb-2 font-medium text-foreground"
+        >
           Upload Image
         </label>
         <input
@@ -131,18 +156,18 @@ export const CreatePost = () => {
           id="image"
           accept="image/*"
           onChange={handleFileChange}
-          className="w-full text-gray-200"
+          className="w-full text-foreground"
         />
       </div>
 
       <button
         type="submit"
-        className="bg-purple-500 text-white px-4 py-2 rounded cursor-pointer"
+        className="bg-primary text-primary-foreground px-4 py-2 rounded cursor-pointer"
       >
         {isPending ? "Creating..." : "Create Post"}
       </button>
 
-      {isError && <p className="text-red-600"> Error creating post. </p>}
+      {isError && <p className="text-destructive mt-2">Error creating post.</p>}
     </form>
   );
 };

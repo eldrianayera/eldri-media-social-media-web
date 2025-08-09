@@ -34,19 +34,21 @@ export const CommunityList = () => {
     );
 
   return (
-    <div className="max-w-5xl mx-auto space-y-4">
+    <div className="max-w-5xl mx-auto space-y-6 px-4">
       {data?.map((community) => (
         <div
           key={community.id}
-          className="border border-white/10 p-4 rounded hover:-translate-y-1 transition transform"
+          className="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-transform duration-300 ease-in-out cursor-pointer"
         >
           <Link
             to={`/community/${community.id}`}
-            className="text-2xl font-bold text-purple-500 hover:underline"
+            className="text-2xl font-semibold hover:text-primary "
           >
             {community.name}
           </Link>
-          <p className="text-gray-400 mt-2">{community.description}</p>
+          <p className="text-foreground/70 mt-3 leading-relaxed">
+            {community.description}
+          </p>
         </div>
       ))}
     </div>

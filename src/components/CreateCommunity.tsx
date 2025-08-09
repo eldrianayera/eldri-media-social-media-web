@@ -34,11 +34,13 @@ export const CreateCommunity = () => {
   };
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4">
-      <h2 className="text-6xl font-bold mb-6 text-center bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
-        Create New Community
-      </h2>
+      <h2 className="page-header">Create New Community</h2>
+
       <div>
-        <label htmlFor="name" className="block mb-2 font-medium">
+        <label
+          htmlFor="name"
+          className="block mb-2 font-medium text-foreground"
+        >
           Community Name
         </label>
         <input
@@ -46,29 +48,34 @@ export const CreateCommunity = () => {
           id="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full border border-white/10 bg-transparent p-2 rounded"
+          className="w-full border border-border bg-background p-2 rounded text-foreground"
           required
         />
       </div>
       <div>
-        <label htmlFor="description" className="block mb-2 font-medium">
+        <label
+          htmlFor="description"
+          className="block mb-2 font-medium text-foreground"
+        >
           Description
         </label>
         <textarea
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full border border-white/10 bg-transparent p-2 rounded"
+          className="w-full border border-border bg-background p-2 rounded text-foreground"
           rows={3}
         />
       </div>
       <button
         type="submit"
-        className="bg-purple-500 text-white px-4 py-2 rounded cursor-pointer"
+        className="bg-primary text-primary-foreground px-4 py-2 rounded cursor-pointer"
       >
         {isPending ? "Creating..." : "Create Community"}
       </button>
-      {isError && <p className="text-red-500">Error creating community.</p>}
+      {isError && (
+        <p className="text-destructive mt-2">Error creating community.</p>
+      )}
     </form>
   );
 };
