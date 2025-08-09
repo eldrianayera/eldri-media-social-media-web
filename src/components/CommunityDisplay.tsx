@@ -1,53 +1,65 @@
 import { useQuery } from "@tanstack/react-query";
-import type { Post } from "./PostList";
 import { supabase } from "../supabase-client";
 import { PostItem } from "./PostItem";
+import { type Post } from "./PostList";
 
 interface Props {
   communityId: number;
 }
 
-interface PostWithCommunity extends Post {
-  communities: {
-    name: string;
-  };
+interface CommunityData {
+  name: string;
+  posts: Post[];
 }
 
-const fetchCommunityPosts = async (
+const fetchCommunityData = async (
   communityId: number
-): Promise<PostWithCommunity[]> => {
-  const { error, data } = await supabase
-    .from("posts")
-    .select("*, communities(name)")
-    .eq("community_id", communityId)
-    .order("created_at", { ascending: false });
+): Promise<CommunityData> => {
+  const { data, error } = await supabase
+    .from("communities")
+    .select("name, posts(*)") 
+    .eq("id", communityId)
+    .single();
 
   if (error) throw new Error(error.message);
 
-  return data as PostWithCommunity[];
+  return { name: data.name, posts: data.posts || [] };
 };
 
 export const CommunityDisplay = ({ communityId }: Props) => {
-  const { data, error, isLoading } = useQuery<PostWithCommunity[], Error>({
-    queryKey: ["community", communityId],
-    queryFn: () => fetchCommunityPosts(communityId),
+  const { data, error, isLoading } = useQuery<CommunityData, Error>({
+    queryKey: ["communityData", communityId],
+    queryFn: () => fetchCommunityData(communityId),
   });
 
-  if (error) throw new Error(error.message);
+  if (isLoading) {
+    return <div className="text-center py-4">Loading community...</div>;
+  }
 
-  if (isLoading) return <div>Loading posts...</div>;
+  if (error) {
+    return (
+      <div className="text-center text-red-500 py-4">
+        Error: {error.message}
+      </div>
+    );
+  }
 
   return (
     <div>
-      <h2>Community Posts</h2>
-      {data && data.length > 0 ? (
-        <div>
-          {data.map((post, key) => (
-            <PostItem key={key} post={post} />
+      <h2 className="text-6xl font-bold mb-6 text-center bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+        {data?.name}
+      </h2>
+
+      {data!.posts.length > 0 ? (
+        <div className="flex flex-wrap gap-6 justify-center">
+          {data!.posts.map((post) => (
+            <PostItem key={post.id} post={post} />
           ))}
         </div>
       ) : (
-        <p> No post in this community yet... </p>
+        <p className="text-center text-gray-400">
+          No posts in this community yet.
+        </p>
       )}
     </div>
   );
