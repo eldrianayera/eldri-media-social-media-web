@@ -1,81 +1,108 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { supabase } from "../supabase-client";
+import { useData } from "../context/DataContext";
 
-interface CommunityInput {
-  name: string;
-  description: string;
-}
-const createCommunity = async (community: CommunityInput) => {
-  const { error, data } = await supabase.from("communities").insert(community);
+const FONT = "'Pin Sans', -apple-system, system-ui, sans-serif";
 
-  if (error) throw new Error(error.message);
-  return data;
+const labelStyle: React.CSSProperties = {
+  display: "block",
+  fontFamily: FONT,
+  fontSize: "14px",
+  fontWeight: 700,
+  color: "#211922",
+  marginBottom: "6px",
+};
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  backgroundColor: "#ffffff",
+  border: "1px solid #e5e5e0",
+  borderRadius: "16px",
+  padding: "11px 15px",
+  fontFamily: FONT,
+  fontSize: "16px",
+  fontWeight: 400,
+  lineHeight: 1.4,
+  color: "#211922",
+  boxSizing: "border-box",
+  outline: "none",
+  transition: "border-color 0.15s",
 };
 
 export const CreateCommunity = () => {
-  const [name, setName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const { addCommunity } = useData();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
-  const { mutate, isPending, isError } = useMutation({
-    mutationFn: createCommunity,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["communities"] });
-      navigate("/communities");
-    },
-  });
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutate({ name, description });
+    if (!name.trim()) return;
+    addCommunity({ name: name.trim(), description: description.trim() });
+    navigate("/communities");
   };
+
+  const focusBorder = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    e.currentTarget.style.borderColor = "#435ee5";
+  };
+  const blurBorder = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    e.currentTarget.style.borderColor = "#e5e5e0";
+  };
+
+  const canSubmit = name.trim();
+
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4">
-      <h2 className="page-header">Create New Community</h2>
+    <form onSubmit={handleSubmit} className="max-w-xl mx-auto space-y-5">
+      <h2 className="page-header">New Community</h2>
 
       <div>
-        <label
-          htmlFor="name"
-          className="block mb-2 font-medium text-foreground"
-        >
-          Community Name
-        </label>
+        <label style={labelStyle}>Name</label>
         <input
           type="text"
-          id="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full border border-border bg-background p-2 rounded text-foreground"
+          placeholder="Name your community…"
+          style={inputStyle}
+          onFocus={focusBorder}
+          onBlur={blurBorder}
           required
         />
       </div>
+
       <div>
-        <label
-          htmlFor="description"
-          className="block mb-2 font-medium text-foreground"
-        >
-          Description
-        </label>
+        <label style={labelStyle}>Description</label>
         <textarea
-          id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full border border-border bg-background p-2 rounded text-foreground"
+          placeholder="What's this community about?"
           rows={3}
+          style={{ ...inputStyle, resize: "vertical" }}
+          onFocus={focusBorder}
+          onBlur={blurBorder}
         />
       </div>
-      <button
-        type="submit"
-        className="bg-primary text-primary-foreground px-4 py-2 rounded cursor-pointer"
-      >
-        {isPending ? "Creating..." : "Create Community"}
-      </button>
-      {isError && (
-        <p className="text-destructive mt-2">Error creating community.</p>
-      )}
+
+      <div className="flex items-center gap-4 pt-2">
+        <button
+          type="submit"
+          disabled={!canSubmit}
+          style={{
+            fontFamily: FONT,
+            fontSize: "12px",
+            fontWeight: 400,
+            padding: "6px 14px",
+            borderRadius: "16px",
+            border: "none",
+            backgroundColor: canSubmit ? "#e60023" : "#e5e5e0",
+            color: canSubmit ? "#ffffff" : "#91918c",
+            cursor: canSubmit ? "pointer" : "default",
+            transition: "background-color 0.15s, color 0.15s",
+          }}
+        >
+          Create
+        </button>
+      </div>
     </form>
   );
 };

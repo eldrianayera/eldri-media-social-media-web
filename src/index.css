@@ -1,71 +1,99 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: rgb(var(--background));
-  --color-foreground: rgb(var(--foreground));
-  --color-primary: rgb(var(--primary));
-  --color-secondary: rgb(var(--secondary));
-  --color-border: rgb(var(--border));
+  --font-sans: 'Pin Sans', -apple-system, system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Pinterest color palette */
+  --color-pinterest-red: #e60023;
+  --color-pinterest-red-hover: #c0001d;
+  --color-plum: #211922;
+  --color-olive: #62625b;
+  --color-silver: #91918c;
+  --color-sand: #e5e5e0;
+  --color-warm-light: #e0e0d9;
+  --color-fog: #f6f6f3;
+  --color-border-disabled: #c8c8c1;
+  --color-hover-gray: #bcbcb3;
+  --color-dark-surface: #33332e;
+  --color-focus-blue: #435ee5;
+  --color-link-blue: #2b48d4;
+  --color-error-red: #9e0a0a;
+
+  /* Semantic aliases */
+  --color-background: #ffffff;
+  --color-foreground: #211922;
+  --color-border: #91918c;
+  --color-primary: #e60023;
+  --color-primary-foreground: #000000;
+  --color-secondary: #62625b;
+  --color-muted: #62625b;
 }
 
 @layer base {
-  :root {
-    --background: 33, 33, 33; /* #212121 - Dark background */
-    --foreground: 245, 245, 245; /* #F5F5F5 - Light text */
-    --card: 48, 48, 48; /* #303030 - Card/darker surface */
-    --primary: 29, 155, 240; /* #1DA1F2 - Twitter blue (primary accent) */
-    --primary-foreground: 255, 255, 255; /* White text on primary */
-    --secondary: 142, 71, 200; /* #8E47C8 - Purple accent (e.g., Instagram) */
-    --border: 66, 66, 66; /* #424242 - Border color */
-  }
-
   html {
     @apply scroll-smooth;
   }
 
   body {
-    @apply bg-background text-foreground transition-colors duration-300;
+    background-color: #ffffff;
+    color: #211922;
+    font-family: 'Pin Sans', -apple-system, system-ui, 'Segoe UI', Roboto,
+      'Oxygen-Sans', Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans',
+      'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
 @layer utilities {
-  @keyframes blink {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0;
-    }
-  }
-  .animate-blink {
-    animation: blink 0.8s step-end infinite;
-  }
   @keyframes loading {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(250%);
-    }
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(250%); }
   }
   .animate-loading-bar {
     animation: loading 0.8s ease infinite;
   }
-}
 
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
+  /* Masonry column grid */
+  .masonry-grid {
+    columns: 2;
+    column-gap: 16px;
+  }
+
+  @media (min-width: 640px) {
+    .masonry-grid { columns: 3; }
+  }
+
+  @media (min-width: 768px) {
+    .masonry-grid { columns: 4; }
+  }
+
+  @media (min-width: 1024px) {
+    .masonry-grid { columns: 5; }
+  }
+
+  .masonry-item {
+    break-inside: avoid;
+    margin-bottom: 16px;
+  }
 }
 
 @utility page-header {
-  @apply text-6xl font-bold text-center mb-6 bg-gradient-to-r from-gray-500 to-gray-200 bg-clip-text text-transparent;
+  font-family: 'Pin Sans', -apple-system, system-ui, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -1.2px;
+  color: #211922;
+  text-align: center;
+  margin-bottom: 1.5rem;
 }

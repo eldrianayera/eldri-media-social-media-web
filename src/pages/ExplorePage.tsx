@@ -3,10 +3,10 @@ import { useData } from "../context/DataContext";
 
 const FONT = "'Pin Sans', -apple-system, system-ui, sans-serif";
 
-export default function Home() {
+export default function ExplorePage() {
   const { posts } = useData();
   const half = Math.ceil(posts.length / 2);
-  const homePosts = posts.slice(0, half);
+  const explorePosts = posts.slice(half);
 
   return (
     <div>
@@ -21,10 +21,10 @@ export default function Home() {
             margin: 0,
           }}
         >
-          Home
+          Explore
         </h2>
       </div>
-      <PostList posts={homePosts} />
+      <PostList posts={explorePosts} />
     </div>
   );
 }

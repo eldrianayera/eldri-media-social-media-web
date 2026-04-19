@@ -1,62 +1,32 @@
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../supabase-client";
+import { useData } from "../context/DataContext";
 import { PostItem } from "./PostItem";
-import { type Post } from "./PostList";
+import { NoData } from "./NoData";
 
 interface Props {
   communityId: number;
 }
 
-interface CommunityData {
-  name: string;
-  posts: Post[];
-}
-
-const fetchCommunityData = async (
-  communityId: number
-): Promise<CommunityData> => {
-  const { data, error } = await supabase
-    .from("communities")
-    .select("name, posts(*)")
-    .eq("id", communityId)
-    .single();
-
-  if (error) throw new Error(error.message);
-
-  return { name: data.name, posts: data.posts || [] };
-};
-
 export const CommunityDisplay = ({ communityId }: Props) => {
-  const { data, error, isLoading } = useQuery<CommunityData, Error>({
-    queryKey: ["communityData", communityId],
-    queryFn: () => fetchCommunityData(communityId),
-  });
+  const { getCommunityById, getPostsByCommunityId } = useData();
+  const community = getCommunityById(communityId);
 
-  if (isLoading) {
-    return <div className="text-center py-4">Loading community...</div>;
+  if (!community) {
+    return <NoData message="Community not found" detail="This community doesn't exist." />;
   }
 
-  if (error) {
-    return (
-      <div className="text-center text-red-500 py-4">
-        Error: {error.message}
-      </div>
-    );
-  }
+  const posts = getPostsByCommunityId(communityId);
 
   return (
     <div>
-      <h2 className="page-header mb-12 p-5">{data?.name}</h2>
-      {data!.posts.length > 0 ? (
-        <div className="flex flex-wrap gap-6 justify-center">
-          {data!.posts.map((post) => (
+      <h2 className="page-header mb-8">{community.name}</h2>
+      {posts.length > 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 px-2">
+          {posts.map((post) => (
             <PostItem key={post.id} post={post} />
           ))}
         </div>
       ) : (
-        <p className="text-center text-foreground/60">
-          No posts in this community yet.
-        </p>
+        <NoData message="No posts yet" detail="Be the first to post in this community." />
       )}
     </div>
   );

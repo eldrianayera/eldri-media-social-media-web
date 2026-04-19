@@ -1,52 +1,66 @@
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../supabase-client";
 import { Link } from "react-router";
+import { useData, type Community } from "../context/DataContext";
 
-export interface Community {
-  id: number;
-  name: string;
-  description: string;
-  created_at: string;
-}
-export const fetchCommunities = async (): Promise<Community[]> => {
-  const { data, error } = await supabase
-    .from("communities")
-    .select("*")
-    .order("created_at", { ascending: false });
+const FONT = "'Pin Sans', -apple-system, system-ui, sans-serif";
 
-  if (error) throw new Error(error.message);
-  return data as Community[];
-};
+export type { Community };
 
 export const CommunityList = () => {
-  const { data, error, isLoading } = useQuery<Community[], Error>({
-    queryKey: ["communities"],
-    queryFn: fetchCommunities,
-  });
-
-  if (isLoading)
-    return <div className="text-center py-4">Loading communities...</div>;
-  if (error)
-    return (
-      <div className="text-center text-red-500 py-4">
-        Error: {error.message}
-      </div>
-    );
+  const { communities } = useData();
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6 px-4">
-      {data?.map((community) => (
+    <div className="max-w-3xl mx-auto space-y-4 px-2">
+      {communities.map((community) => (
         <div
           key={community.id}
-          className="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-transform duration-300 ease-in-out cursor-pointer"
+          style={{
+            backgroundColor: "#ffffff",
+            border: "1px solid #e5e5e0",
+            borderRadius: "20px",
+            padding: "20px 24px",
+            transition: "border-color 0.15s, box-shadow 0.15s",
+          }}
+          onMouseEnter={(e) => {
+            const el = e.currentTarget as HTMLDivElement;
+            el.style.borderColor = "#91918c";
+            el.style.boxShadow = "0 2px 12px rgba(0,0,0,0.08)";
+          }}
+          onMouseLeave={(e) => {
+            const el = e.currentTarget as HTMLDivElement;
+            el.style.borderColor = "#e5e5e0";
+            el.style.boxShadow = "none";
+          }}
         >
           <Link
             to={`/community/${community.id}`}
-            className="text-2xl font-semibold hover:text-primary "
+            style={{
+              fontFamily: FONT,
+              fontSize: "16px",
+              fontWeight: 700,
+              color: "#211922",
+              textDecoration: "none",
+              display: "block",
+              marginBottom: "6px",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.color = "#e60023";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.color = "#211922";
+            }}
           >
             {community.name}
           </Link>
-          <p className="text-foreground/70 mt-3 leading-relaxed">
+          <p
+            style={{
+              fontFamily: FONT,
+              fontSize: "14px",
+              fontWeight: 400,
+              lineHeight: 1.5,
+              color: "#62625b",
+              margin: 0,
+            }}
+          >
             {community.description}
           </p>
         </div>

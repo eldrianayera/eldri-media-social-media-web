@@ -1,125 +1,92 @@
 import { useState } from "react";
-import { type Comment } from "./CommentSection";
-import { useAuth } from "../context/AuthContext";
-import { supabase } from "../supabase-client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ArrowDownIcon, ArrowUp } from "lucide-react";
+import { type Comment } from "../data/dummy";
+import { ChevronDown, ChevronUp } from "lucide-react";
+
+const FONT = "'Pin Sans', -apple-system, system-ui, sans-serif";
 
 interface Props {
-  comment: Comment & {
-    children?: Comment[];
-  };
-  postId: number;
+  comment: Comment & { children?: Comment[] };
 }
 
-const createReply = async (
-  replyContent: string,
-  postId: number,
-  parentCommentId: number,
-  userId?: string,
-  author?: string
-) => {
-  if (!userId || !author) {
-    throw new Error("You must be logged in to reply.");
-  }
-
-  const { error } = await supabase.from("comments").insert({
-    post_id: postId,
-    content: replyContent,
-    parent_comment_id: parentCommentId,
-    user_id: userId,
-    author: author,
-  });
-
-  if (error) throw new Error(error.message);
-};
-
-export const CommentItem = ({ comment, postId }: Props) => {
-  const [showReply, setShowReply] = useState<boolean>(false);
-  const [replyText, setReplyText] = useState<string>("");
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-
-  const { user } = useAuth();
-  const queryClient = useQueryClient();
-
-  const { mutate, isPending, isError } = useMutation({
-    mutationFn: (replyContent: string) =>
-      createReply(
-        replyContent,
-        postId,
-        comment.id,
-        user?.id,
-        user?.user_metadata?.user_name
-      ),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments", postId] });
-      setReplyText("");
-      setShowReply(false);
-    },
-  });
-
-  const handleReplySubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!replyText) return;
-    mutate(replyText);
-  };
+export const CommentItem = ({ comment }: Props) => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <div className="pl-4 border-l border-border">
-      <div className="mb-2">
-        <div className="flex items-center space-x-2">
-          {/* Display the commenter's username */}
-          <span className="text-sm font-bold text-primary">
-            {comment.author}
-          </span>
-          <span className="text-xs text-foreground/60">
-            {new Date(comment.created_at).toLocaleString()}
-          </span>
-        </div>
-
-        <p className="text-foreground/80">{comment.content}</p>
-
-        <button
-          onClick={() => setShowReply((prev) => !prev)}
-          className="text-primary text-sm mt-1"
+    <div style={{ paddingLeft: "16px", borderLeft: "3px solid #e5e5e0" }}>
+      {/* Author + timestamp */}
+      <div className="flex items-center gap-2 mb-1">
+        <span
+          style={{
+            fontFamily: FONT,
+            fontSize: "12px",
+            fontWeight: 700,
+            color: "#211922",
+          }}
         >
-          {showReply ? "Cancel" : "Reply"}
-        </button>
+          {comment.author}
+        </span>
+        <span style={{ fontSize: "12px", color: "#91918c", fontFamily: FONT }}>
+          ·{" "}
+          {new Date(comment.created_at).toLocaleString("en-US", {
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </span>
       </div>
 
-      {showReply && user && (
-        <form onSubmit={handleReplySubmit} className="mb-2">
-          <textarea
-            value={replyText}
-            onChange={(e) => setReplyText(e.target.value)}
-            className="w-full border border-border bg-background p-2 rounded"
-            placeholder="Write a reply..."
-            rows={2}
-          />
-          <button
-            type="submit"
-            className="mt-1 bg-primary text-primary-foreground px-3 py-1 rounded"
-          >
-            {isPending ? "Posting..." : "Post Reply"}
-          </button>
-          {isError && <p className="text-red-500">Error posting reply.</p>}
-        </form>
-      )}
+      {/* Content */}
+      <p
+        style={{
+          fontFamily: FONT,
+          fontSize: "14px",
+          fontWeight: 400,
+          lineHeight: 1.5,
+          color: "#211922",
+          margin: "0 0 8px 0",
+        }}
+      >
+        {comment.content}
+      </p>
 
+      {/* Replies toggle */}
       {comment.children && comment.children.length > 0 && (
         <div>
           <button
             onClick={() => setIsCollapsed((prev) => !prev)}
-            title={isCollapsed ? "Hide Replies" : "Show Replies"}
-            className="text-primary"
+            className="flex items-center gap-1"
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontFamily: FONT,
+              fontSize: "12px",
+              color: "#62625b",
+              padding: "2px 0",
+              marginBottom: "8px",
+            }}
           >
-            {isCollapsed ? <ArrowDownIcon /> : <ArrowUp />}
+            {isCollapsed ? (
+              <>
+                <ChevronDown size={13} />
+                <span>
+                  Show {comment.children.length}{" "}
+                  {comment.children.length === 1 ? "reply" : "replies"}
+                </span>
+              </>
+            ) : (
+              <>
+                <ChevronUp size={13} />
+                <span>Hide replies</span>
+              </>
+            )}
           </button>
 
           {!isCollapsed && (
-            <div className="space-y-2">
-              {comment.children.map((child, key) => (
-                <CommentItem key={key} comment={child} postId={postId} />
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              {comment.children.map((child) => (
+                <CommentItem key={child.id} comment={child} />
               ))}
             </div>
           )}

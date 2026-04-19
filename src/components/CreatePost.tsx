@@ -1,173 +1,223 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState, type ChangeEvent } from "react";
-import { supabase } from "../supabase-client";
-import { useAuth } from "../context/AuthContext";
-import { fetchCommunities } from "./CommunityList";
 import { useNavigate } from "react-router";
+import { useData } from "../context/DataContext";
 
-interface PostInput {
-  title: string;
-  content: string;
-  avatar_url: string | null;
-  community_id: number | null;
-}
+const FONT = "'Pin Sans', -apple-system, system-ui, sans-serif";
 
-const createPost = async (post: PostInput, imageFile: File) => {
-  const filePath = `${post.title}-${Date.now()}-${imageFile.name}`;
+const labelStyle: React.CSSProperties = {
+  display: "block",
+  fontFamily: FONT,
+  fontSize: "14px",
+  fontWeight: 700,
+  color: "#211922",
+  marginBottom: "6px",
+};
 
-  const { error: uploadError } = await supabase.storage
-    .from("post-images")
-    .upload(filePath, imageFile);
-
-  if (uploadError) throw new Error(uploadError.message);
-
-  const { data: publicURLData } = supabase.storage
-    .from("post-images")
-    .getPublicUrl(filePath);
-
-  const { data, error } = await supabase
-    .from("posts")
-    .insert({ ...post, image_url: publicURLData.publicUrl });
-
-  if (error) throw new Error(error.message);
-
-  return data;
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  backgroundColor: "#ffffff",
+  border: "1px solid #e5e5e0",
+  borderRadius: "16px",
+  padding: "11px 15px",
+  fontFamily: FONT,
+  fontSize: "16px",
+  fontWeight: 400,
+  lineHeight: 1.4,
+  color: "#211922",
+  boxSizing: "border-box",
+  outline: "none",
+  transition: "border-color 0.15s",
 };
 
 export const CreatePost = () => {
-  const [title, setTitle] = useState<string>("");
-  const [content, setContent] = useState<string>("");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [communityId, setCommunityId] = useState<number | null>(null);
-
+  const { addPost, communities } = useData();
   const navigate = useNavigate();
 
-  const { user } = useAuth();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [communityId, setCommunityId] = useState<number | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const { data: communities } = useQuery({
-    queryKey: ["communities"],
-    queryFn: fetchCommunities,
-  });
-
-  const { mutate, isPending, isError } = useMutation({
-    mutationFn: (data: { post: PostInput; imageFile: File }) => {
-      return createPost(data.post, data.imageFile);
-    },
-
-    onSuccess: () => {
-      navigate(`/`);
-    },
-  });
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!selectedFile) {
-      alert("Please select image ...");
-      return;
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
+    setImageFile(file);
+    if (file) {
+      setImagePreview(URL.createObjectURL(file));
+    } else {
+      setImagePreview(null);
     }
-    mutate({
-      post: {
-        title,
-        content,
-        avatar_url: user?.user_metadata.avatar_url || null,
-        community_id: communityId,
-      },
-      imageFile: selectedFile,
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim() || !content.trim()) return;
+
+    const id = addPost({
+      title: title.trim(),
+      content: content.trim(),
+      image_url: imagePreview ?? "",
+      avatar_url: undefined,
+      community_id: communityId,
     });
+
+    navigate(`/post/${id}`);
   };
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setSelectedFile(event.target.files[0]);
-    }
+  const focusBorder = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    e.currentTarget.style.borderColor = "#435ee5";
+  };
+  const blurBorder = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    e.currentTarget.style.borderColor = "#e5e5e0";
   };
 
-  const handleCommunityChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value;
-    setCommunityId(value ? Number(value) : null);
-  };
+  const canSubmit = title.trim() && content.trim();
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4">
+    <form onSubmit={handleSubmit} className="max-w-xl mx-auto space-y-5">
+      {/* Title */}
       <div>
-        <label
-          htmlFor="title"
-          className="block mb-2 font-medium text-foreground"
-        >
-          Title
-        </label>
+        <label style={labelStyle}>Title</label>
         <input
           type="text"
-          id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full border border-border bg-background p-2 rounded text-foreground"
-          required
-        />
-      </div>
-      <div>
-        <label
-          htmlFor="content"
-          className="block mb-2 font-medium text-foreground"
-        >
-          Content
-        </label>
-        <textarea
-          id="content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className="w-full border border-border bg-background p-2 rounded text-foreground"
-          rows={5}
+          placeholder="Give your post a title…"
+          style={inputStyle}
+          onFocus={focusBorder}
+          onBlur={blurBorder}
           required
         />
       </div>
 
+      {/* Content */}
       <div>
-        <label
-          htmlFor="community"
-          className="block mb-2 font-medium text-foreground"
-        >
-          Select Community
-        </label>
+        <label style={labelStyle}>Content</label>
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          placeholder="Write your post…"
+          rows={5}
+          style={{ ...inputStyle, resize: "vertical" }}
+          onFocus={focusBorder}
+          onBlur={blurBorder}
+          required
+        />
+      </div>
+
+      {/* Community */}
+      <div>
+        <label style={labelStyle}>Community</label>
         <select
-          name="community"
-          id="community"
-          onChange={handleCommunityChange}
-          className="w-full border border-border bg-background p-2 rounded text-foreground"
+          value={communityId ?? ""}
+          onChange={(e) => setCommunityId(e.target.value ? Number(e.target.value) : null)}
+          style={inputStyle}
+          onFocus={focusBorder}
+          onBlur={blurBorder}
         >
-          <option value={""}> -- Choose a Community -- </option>
-          {communities?.map((community, key) => (
-            <option key={key} value={community.id}>
-              {community.name}
-            </option>
+          <option value="">— Choose a community —</option>
+          {communities.map((c) => (
+            <option key={c.id} value={c.id}>{c.name}</option>
           ))}
         </select>
       </div>
 
+      {/* Image */}
       <div>
-        <label
-          htmlFor="image"
-          className="block mb-2 font-medium text-foreground"
-        >
-          Upload Image
-        </label>
-        <input
-          type="file"
-          id="image"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="w-full text-foreground"
-        />
+        <label style={labelStyle}>Image</label>
+        {imagePreview ? (
+          <div style={{ position: "relative" }}>
+            <img
+              src={imagePreview}
+              alt="Preview"
+              style={{
+                width: "100%",
+                maxHeight: "280px",
+                objectFit: "cover",
+                borderRadius: "20px",
+                border: "1px solid #e5e5e0",
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => { setImageFile(null); setImagePreview(null); }}
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                fontFamily: FONT,
+                fontSize: "12px",
+                padding: "4px 10px",
+                borderRadius: "12px",
+                border: "none",
+                backgroundColor: "#211922",
+                color: "#ffffff",
+                cursor: "pointer",
+              }}
+            >
+              Remove
+            </button>
+          </div>
+        ) : (
+          <label
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+              border: "2px dashed #e5e5e0",
+              borderRadius: "20px",
+              padding: "40px 24px",
+              backgroundColor: "#f6f6f3",
+              cursor: "pointer",
+              transition: "border-color 0.15s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.borderColor = "#91918c")}
+            onMouseLeave={(e) => (e.currentTarget.style.borderColor = "#e5e5e0")}
+          >
+            <span style={{ fontFamily: FONT, fontSize: "14px", color: "#62625b" }}>
+              Click to upload an image
+            </span>
+            <span style={{ fontFamily: FONT, fontSize: "12px", color: "#91918c" }}>
+              PNG, JPG, GIF, WebP
+            </span>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+            />
+          </label>
+        )}
+        {imageFile && !imagePreview && (
+          <p style={{ fontFamily: FONT, fontSize: "12px", color: "#62625b", marginTop: "6px" }}>
+            {imageFile.name}
+          </p>
+        )}
       </div>
 
-      <button
-        type="submit"
-        className="bg-primary text-primary-foreground px-4 py-2 rounded cursor-pointer"
-      >
-        {isPending ? "Creating..." : "Create Post"}
-      </button>
-
-      {isError && <p className="text-destructive mt-2">Error creating post.</p>}
+      {/* Submit */}
+      <div className="flex items-center gap-4 pt-2">
+        <button
+          type="submit"
+          disabled={!canSubmit}
+          style={{
+            fontFamily: FONT,
+            fontSize: "12px",
+            fontWeight: 400,
+            padding: "6px 14px",
+            borderRadius: "16px",
+            border: "none",
+            backgroundColor: canSubmit ? "#e60023" : "#e5e5e0",
+            color: canSubmit ? "#ffffff" : "#91918c",
+            cursor: canSubmit ? "pointer" : "default",
+            transition: "background-color 0.15s, color 0.15s",
+          }}
+        >
+          Publish
+        </button>
+      </div>
     </form>
   );
 };

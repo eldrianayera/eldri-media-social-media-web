@@ -4,7 +4,7 @@ import { PostDetail } from "../components/PostDetail";
 export default function PostPage() {
   const { id } = useParams<{ id: string }>();
   return (
-    <div className="pt-10">
+    <div className="pt-4">
       <PostDetail postId={Number(id)} />
     </div>
   );
