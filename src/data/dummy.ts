@@ -32,35 +32,35 @@ export const communities: Community[] = [
     id: 1,
     name: "Family & Parenting",
     description:
-      "A space for parents, grandparents, and caregivers to share stories, ask questions, and celebrate the everyday chaos of family life.",
+      "for the girlies and parentals living that chaotic family life — share the fails, the wins, and everything in between bc we're all just trying to survive",
     created_at: "2024-11-01T09:00:00Z",
   },
   {
     id: 2,
     name: "Travel & Adventures",
     description:
-      "From weekend road trips to months abroad — share itineraries, hidden gems, and the stories that only happen when you leave home.",
+      "weekend getaways to months abroad — drop the hidden gems, the wild stories, and the stuff that only happens when u leave ur comfort zone",
     created_at: "2024-11-03T10:30:00Z",
   },
   {
     id: 3,
     name: "Food & Cooking",
     description:
-      "Recipes, restaurant finds, kitchen failures, and the meals that made someone feel at home. All cuisines, all skill levels.",
+      "recipes that slap, restaurant finds, kitchen disasters, and the meals that hit different — all cuisines, all skill levels, no gatekeeping",
     created_at: "2024-11-08T08:00:00Z",
   },
   {
     id: 4,
     name: "Hobbies & Creative Life",
     description:
-      "Gardening, painting, knitting, woodworking, photography — share what you make and the joy of making it.",
+      "gardening, art, knitting, woodworking, photography — share what u make and the serotonin that comes with it",
     created_at: "2024-11-12T14:00:00Z",
   },
   {
     id: 5,
     name: "Wellness & Personal Growth",
     description:
-      "Honest conversations about rest, habits, mental health, and becoming the person you actually want to be.",
+      "real talk about rest, habits, mental health, and becoming the person u actually want to be — no toxic positivity just authentic convos",
     created_at: "2024-11-20T11:00:00Z",
   },
 ];
@@ -93,71 +93,71 @@ export const posts: Post[] = (() => {
   ];
 
   const emotions = [
-    "obsessed",
-    "confused",
-    "lowkey addicted",
-    "not okay",
-    "surprisingly into it",
-    "questioning my life",
+    "down bad fr",
+    "confused af",
+    "obsessed help",
+    "not okay i-",
+    "living for this",
+    "questioning everything",
   ];
 
   const reactions = [
-    "this changed everything",
-    "idk how to feel",
-    "10/10 would do again",
-    "never again actually",
-    "why is this so fun",
-    "this was a mistake",
+    "no bc why is this working",
+    "genuinely concerned",
+    "ate and left no crumbs",
+    "never speaking of this again",
+    "why am i laughing",
+    "this feels illegal",
   ];
 
   const questions = [
-    "anyone else??",
-    "be honest",
-    "is it just me",
-    "what is happening",
-    "why are we like this",
+    "is this normal",
+    "be so fr rn",
+    "am i the drama",
+    "what did i just watch",
+    "anyone else or just me",
   ];
 
   const contentBlocks = [
     (t: string) =>
-      `saw something about ${t}.\n${verbs[Math.floor(Math.random() * verbs.length)]} it.\n\nnow i'm ${emotions[Math.floor(Math.random() * emotions.length)]}.`,
+      `saw ${t} on my fyp once\nnext thing i know it's 3am\n\n${emotions[Math.floor(Math.random() * emotions.length)]}`,
 
     (t: string) =>
-      `me: i'll try ${t} once\nalso me: does it 5 times\n\n${reactions[Math.floor(Math.random() * reactions.length)]}`,
+      `me: just gonna try ${t}\nalso me: \n\n${reactions[Math.floor(Math.random() * reactions.length)]}`,
 
     (t: string) =>
-      `${t} era started as a joke.\nnow it's serious.\n\n${questions[Math.floor(Math.random() * questions.length)]}`,
+      `${t} phase was supposed to be ironic\nit's not ironic anymore\n\n${questions[Math.floor(Math.random() * questions.length)]}`,
 
     (t: string) =>
-      `not me getting into ${t} at 2am.\n\nsleep schedule ruined but worth it.`,
+      `not me explaining ${t} to my mom at midnight\n\nshe looked disappointed but idc`,
 
-    (t: string) => `thought ${t} would be mid.\n\nwas wrong.\nvery wrong.`,
-
-    (t: string) =>
-      `${t} looked easy online.\nit was not easy.\n\nstill kinda fun tho.`,
-
-    (t: string) => `why does ${t} feel like a personality trait now.`,
-
-    (t: string) => `spent way too much time on ${t} today.\n\nno regrets.`,
+    (t: string) => `thought ${t} was mid\n\ni was incorrect\nso incorrect`,
 
     (t: string) =>
-      `${t} + late night = bad decisions\n\nbut also good memories.`,
+      `${t} seemed easy in tutorials\nmy reality: 💀\n\nbut kinda fun tho ngl`,
 
-    (t: string) => `i blinked and now i'm into ${t}.\n\nthis is my life now.`,
+    (t: string) => `since when is ${t} my entire personality\n\nhelp`,
+
+    (t: string) => `my entire day = ${t}\n\nproductivity? never heard of her`,
+
+    (t: string) =>
+      `${t} at 2am decisions hit different\n\nzero regrets`,
+
+    (t: string) => `how did i end up here\n\noh right ${t}\n\nthis is my life now`,
   ];
 
   const titlePatterns = [
     (t: string) =>
-      `Got Into ${t} and Now I'm ${emotions[Math.floor(Math.random() * emotions.length)]}`,
-    (t: string) => `${t} Was Not Supposed To Be This Fun`,
-    (t: string) => `Why Is Everyone Doing ${t} Right Now`,
-    (t: string) => `I Tried ${t} So You Don’t Have To`,
-    (t: string) => `This ${t} Thing Got Out of Hand`,
-    (t: string) => `${t} at 2AM Was a Mistake`,
-    (t: string) => `My ${t} Phase Is Getting Serious`,
-    (t: string) => `Not Me Becoming a ${t} Person`,
-    (t: string) => `${t} Was Supposed To Be a One-Time Thing`,
-    (t: string) => `${t} Lowkey Changed My Week`,
+      `got into ${t} and now i’m ${emotions[Math.floor(Math.random() * emotions.length)]}`,
+    (t: string) => `${t} wasn’t supposed to go this hard`,
+    (t: string) => `why is everyone doing ${t} suddenly`,
+    (t: string) => `tried ${t} so u don’t have to`,
+    (t: string) => `this ${t} situation got out of hand`,
+    (t: string) => `${t} at 2am wasn’t the move`,
+    (t: string) => `my ${t} phase is concerning me`,
+    (t: string) => `not me becoming a ${t} person rn`,
+    (t: string) => `${t} was supposed to be one time`,
+    (t: string) => `${t} actually slapped fr`,
   ];
 
   const seededRandom = (seed: number) => {
@@ -205,7 +205,7 @@ const data: Comment[] = [
     post_id: 1,
     parent_comment_id: null,
     content:
-      "The Sintra meltdown could have been written by me. We had the exact same experience — stunning place, zero memory of actually seeing it because we were in crisis management the whole time.",
+      "bro this is literally me 💀 sintra was gorgeous but i remember nothing bc we were in survival mode the whole time",
     user_id: "u1",
     created_at: "2025-01-14T11:30:00Z",
     author: "mara_k",
@@ -215,7 +215,7 @@ const data: Comment[] = [
     post_id: 1,
     parent_comment_id: 1,
     content:
-      "Coming back the next day solo was the right call. That's the move nobody tells you about.",
+      "going back solo the next day was actually genius based move\nnobody talks about this",
     user_id: "u2",
     created_at: "2025-01-14T12:00:00Z",
     author: "travel_jonas",
@@ -225,7 +225,7 @@ const data: Comment[] = [
     post_id: 1,
     parent_comment_id: 1,
     content:
-      "What stroller did you use? We're planning a similar trip and gate-checking has been a nightmare for us.",
+      "wait what stroller did u use\nwe're doing a similar trip and gate checking has been a nightmare",
     user_id: "u3",
     created_at: "2025-01-14T13:15:00Z",
     author: "priya_travels",
@@ -235,7 +235,7 @@ const data: Comment[] = [
     post_id: 1,
     parent_comment_id: null,
     content:
-      "The snacks comment — yes. Every experienced parent we met had snacks in three separate pockets. It's infrastructure, not an afterthought.",
+      "the snacks comment YES\n\nevery parent we met had snacks in like 3 different pockets\nit's not a vibe it's infrastructure atp",
     user_id: "u4",
     created_at: "2025-01-14T14:00:00Z",
     author: "lou_family",
@@ -245,7 +245,7 @@ const data: Comment[] = [
     post_id: 1,
     parent_comment_id: 4,
     content:
-      "We now pack a dedicated snack bag that lives in the carry-on and is never, ever emptied.",
+      "we have a designated snack bag now\nit lives in the carry on permanently\nnever emptying it again 💀",
     user_id: "u5",
     created_at: "2025-01-14T14:45:00Z",
     author: "tae_adventures",
@@ -256,7 +256,7 @@ const data: Comment[] = [
     post_id: 2,
     parent_comment_id: null,
     content:
-      "Treating the starter like a living thing you're responsible for — that's the shift. Once that clicked I stopped killing mine every two weeks.",
+      "once you realize the starter is a living thing that depends on you... that's the whole game\nstopped murdering mine every 2 weeks fr",
     user_id: "u6",
     created_at: "2025-01-18T15:00:00Z",
     author: "aleksei_bakes",
@@ -266,7 +266,7 @@ const data: Comment[] = [
     post_id: 2,
     parent_comment_id: 6,
     content:
-      "What hydration percentage are you working with? My crumb is still too tight and I can't figure out if it's the flour or the fermentation.",
+      "hydration percentage rn\n\nmy crumb is still tight and idk if it's the flour or the fermentation or me",
     user_id: "u1",
     created_at: "2025-01-18T15:30:00Z",
     author: "mara_k",
@@ -276,7 +276,7 @@ const data: Comment[] = [
     post_id: 2,
     parent_comment_id: null,
     content:
-      "The Friday evening mix, Saturday morning shape routine is exactly mine. Having the bake as the anchor of the weekend morning is something I didn't anticipate loving so much.",
+      "friday night mix saturday morning bake is literally my routine now\nhaving the bake as weekend anchor... didn't expect to love it this much ngl",
     user_id: "u3",
     created_at: "2025-01-18T16:00:00Z",
     author: "priya_travels",
@@ -287,7 +287,7 @@ const data: Comment[] = [
     post_id: 3,
     parent_comment_id: null,
     content:
-      "The rolly polly naturalist detail made me laugh and also feel something. Kids left to their own devices always find a project. We just have to get out of the way.",
+      "the rolly polly naturalist detail 😭\n\nkids always find a project when left alone\nwe just need to get out of the way",
     user_id: "u4",
     created_at: "2025-01-22T10:00:00Z",
     author: "lou_family",
@@ -297,7 +297,7 @@ const data: Comment[] = [
     post_id: 3,
     parent_comment_id: null,
     content:
-      "Something about the sibling dynamic shifting when screens go away is real. My kids still argue, but they also play together now in a way they didn't before.",
+      "the sibling shift when screens go away is REAL\n\nmy kids still fight but they actually play together now\nkinda slaps tbh",
     user_id: "u5",
     created_at: "2025-01-22T11:30:00Z",
     author: "tae_adventures",
@@ -308,7 +308,7 @@ const data: Comment[] = [
     post_id: 6,
     parent_comment_id: null,
     content:
-      "The video call with your mother folding alongside you — I'm a little teary. That's the real recipe.",
+      "the video call with your mom folding with you... got me in my feels\n\nthat's the actual recipe bestie",
     user_id: "u2",
     created_at: "2025-02-05T17:00:00Z",
     author: "travel_jonas",
@@ -318,7 +318,7 @@ const data: Comment[] = [
     post_id: 6,
     parent_comment_id: 11,
     content:
-      "A misshapen dumpling tastes exactly the same is going on my kitchen wall.",
+      "misshapen dumpling tastes the same\n\ngoing on my kitchen wall fr",
     user_id: "u6",
     created_at: "2025-02-05T17:30:00Z",
     author: "aleksei_bakes",
