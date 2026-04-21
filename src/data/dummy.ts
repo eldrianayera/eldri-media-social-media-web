@@ -83,14 +83,14 @@ export const posts: Post[] = (() => {
     "weekend",
   ];
 
-  const verbs = [
-    "tried",
-    "started",
-    "found",
-    "accidentally got into",
-    "was influenced to try",
-    "randomly decided to do",
-  ];
+  // const verbs = [
+  //   "tried",
+  //   "started",
+  //   "found",
+  //   "accidentally got into",
+  //   "was influenced to try",
+  //   "randomly decided to do",
+  // ];
 
   const emotions = [
     "down bad fr",
